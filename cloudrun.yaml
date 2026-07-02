@@ -1,0 +1,25 @@
+steps:
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/clarity-consulting-llc/fathom-notes:latest'
+      - '.'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/clarity-consulting-llc/fathom-notes:latest']
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'fathom-notes'
+      - '--image=gcr.io/clarity-consulting-llc/fathom-notes:latest'
+      - '--region=us-west1'
+
+images: 
+  - 'gcr.io/clarity-consulting-llc/fathom-notes:latest'
+options:
+  logging: CLOUD_LOGGING_ONLY

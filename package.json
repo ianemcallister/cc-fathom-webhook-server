@@ -1,0 +1,37 @@
+{
+  "name": "cc-fathom-webhook-server",
+  "version": "1.0.0",
+  "description": "Handles webooks coming in from fathom",
+  "homepage": "https://github.com/ianemcallister/cc-fathom-webhook-server#readme",
+  "bugs": {
+    "url": "https://github.com/ianemcallister/cc-fathom-webhook-server/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ianemcallister/cc-fathom-webhook-server.git"
+  },
+  "license": "MIT",
+  "author": "Ian McAllister",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node app.js",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "fathom-typescript": "^0.0.41",
+    "googleapis": "^173.0.0",
+    "morgan": "^1.11.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^26.1.0",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.6.3"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "Node16",
+    "types": ["node"],
+    "moduleResolution": "node16",
+    "rootDir": "src",
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"
+    ]
+  },
+
+  "include": [
+    "src/**/*.ts",
+    "src/scripts/**/*.ts"
+  ],
+
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts"
+  ]
+}
