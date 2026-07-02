@@ -2,10 +2,33 @@ import { google, sheets_v4 } from "googleapis";
 
 const GOOGLE_SHEET_ID_ENV = "GOOGLE_SHEET_ID";
 const GOOGLE_SHEET_TAB_ENV = "GOOGLE_SHEET_TAB";
+const WRITE_HEADERS_ENV = "WRITE_HEADERS";
 const MAX_SHEET_CELL_CHARACTERS = 49_999;
 const MAX_SCHEMA_DEPTH = 3;
 const MAX_SCHEMA_KEYS = 40;
 const DEFAULT_SHEET_RANGE = "A:S";
+
+const SHEET_HEADERS = [
+	"timestamp",
+	"status",
+	"recording_id",
+	"title",
+	"meeting_title",
+	"created_at",
+	"recording_start_time",
+	"recording_end_time",
+	"scheduled_start_time",
+	"scheduled_end_time",
+	"recorded_by_name",
+	"recorded_by_email",
+	"share_url",
+	"meeting_url",
+	"is_test_event",
+	"calendar_invitees_count",
+	"transcript_count",
+	"action_items_count",
+	"default_summary_markdown_formatted",
+];
 
 const SHEETS_SCOPE = ["https://www.googleapis.com/auth/spreadsheets"];
 
@@ -111,6 +134,10 @@ function truncateParsedRowForSheet(row: string[]): string[] {
 	return row.map(truncateForSheetCell);
 }
 
+function shouldWriteHeaders(): boolean {
+	return process.env[WRITE_HEADERS_ENV]?.toLowerCase() === "true";
+}
+
 function buildPayloadSchema(payload: unknown, depth = 0): unknown {
 	if (payload === null) {
 		return "null";
@@ -175,6 +202,9 @@ export async function appendWebhookRow(
 		status: params.webhookType ?? "unknown",
 	});
 	const row = truncateParsedRowForSheet(parsedRow);
+	const values = shouldWriteHeaders()
+		? [truncateParsedRowForSheet(SHEET_HEADERS), row]
+		: [row];
 
 	const response = await getSheetsClient().spreadsheets.values.append({
 		spreadsheetId: getDefaultSheetId(params.sheetId),
@@ -182,7 +212,7 @@ export async function appendWebhookRow(
 		valueInputOption: "RAW",
 		insertDataOption: "INSERT_ROWS",
 		requestBody: {
-			values: [row],
+			values,
 		},
 	});
 
