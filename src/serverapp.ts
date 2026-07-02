@@ -43,6 +43,8 @@ app.get("/api/test", (_req: Request, res: Response) => {
 	res.status(200).send({ message: "Test endpoint is working!" });
 });
 
+
+// https://fathom-notes-222296869158.us-west1.run.app/webhook/fathom
 app.post("/webhook/fathom", async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		if (!validateWebhookSecret(req)) {

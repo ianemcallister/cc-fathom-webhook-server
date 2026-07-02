@@ -2,6 +2,7 @@ import { google, sheets_v4 } from "googleapis";
 
 const GOOGLE_SHEET_ID_ENV = "GOOGLE_SHEET_ID";
 const GOOGLE_SHEET_TAB_ENV = "GOOGLE_SHEET_TAB";
+const MAX_SHEET_CELL_CHARACTERS = 49_999;
 
 const SHEETS_SCOPE = ["https://www.googleapis.com/auth/spreadsheets"];
 
@@ -47,6 +48,14 @@ function serializePayload(payload: unknown): string {
 	}
 }
 
+function truncateForSheetCell(value: string): string {
+	if (value.length <= MAX_SHEET_CELL_CHARACTERS) {
+		return value;
+	}
+
+	return value.slice(0, MAX_SHEET_CELL_CHARACTERS);
+}
+
 function getDefaultSheetRange(sheetTab?: string): string {
 	const tab = sheetTab ?? process.env[GOOGLE_SHEET_TAB_ENV] ?? "Sheet1";
 	return `${tab}!A:C`;
@@ -64,7 +73,7 @@ export async function appendWebhookRow(
 		receivedAt.toISOString(),
 		params.webhookType ?? "unknown",
 		serializePayload(params.payload),
-	];
+	].map(truncateForSheetCell);
 
 	const response = await getSheetsClient().spreadsheets.values.append({
 		spreadsheetId: getDefaultSheetId(params.sheetId),
